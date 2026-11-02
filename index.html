@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FarmaSOS — Cartão de Emergência Medicamentosa</title>
+<style>
+:root {
+  color-scheme: light dark;
+  --site-primary: #126B63;
+  --site-on-primary: #FFFFFF;
+  --site-secondary: #E0F2EE;
+  --site-on-secondary: #153D39;
+  --site-background: #F5FAF8;
+  --site-on-background: #18332F;
+  --site-font-body: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --site-font-heading: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --site-heading-scale: 1;
+  --site-spacing-scale: 1;
+  --site-radius-scale: 1;
+  --site-decoration-opacity: 1;
+  --surface: light-dark(#FFFFFF, #172724);
+  --surface-soft: light-dark(#EDF6F3, #203632);
+  --text-muted: light-dark(#5A716C, #B0C5C0);
+  --border: light-dark(#D7E7E2, #36504A);
+  --accent: #F2B544;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font-family: var(--site-font-body); background: var(--site-background); color: var(--site-on-background); }
+#app { min-height: 100vh; width: 100%; background-color: var(--site-background); color: var(--site-on-background); border-radius: 0; }
+header { background: var(--site-primary); color: var(--site-on-primary); padding: calc(18px * var(--site-spacing-scale)) max(22px, calc((100vw - 1120px)/2)); display:flex; justify-content:space-between; align-items:center; gap:18px; }
+.brand { display:flex; align-items:center; gap:11px; font-weight:850; letter-spacing:-.04em; font-size:1.35rem; }
+.logo { width:39px; height:39px; display:grid; place-items:center; border-radius:13px; background:#FFFFFF; color:#126B63; font-size:1.35rem; font-weight:900; }
+nav { display:flex; gap:20px; align-items:center; flex-wrap:wrap; }
+nav a { color:var(--site-on-primary); text-decoration:none; font-size:.9rem; opacity:.95; }
+nav a:hover { text-decoration:underline; }
+button, .button { border:0; border-radius:calc(12px * var(--site-radius-scale)); background:var(--site-primary); color:var(--site-on-primary); padding:12px 17px; font:inherit; font-weight:750; cursor:pointer; text-decoration:none; display:inline-flex; align-items:center; justify-content:center; gap:8px; }
+.button.light { background:#FFFFFF; color:#126B63; }
+.button.secondary { background:var(--site-secondary); color:var(--site-on-secondary); }
+main { max-width:1120px; margin:auto; padding:0 22px 55px; }
+.hero { padding:66px 0 52px; display:grid; grid-template-columns:1.15fr .85fr; gap:42px; align-items:center; }
+.eyebrow { color:var(--site-primary); text-transform:uppercase; font-size:.76rem; font-weight:850; letter-spacing:.13em; }
+h1,h2,h3 { font-family:var(--site-font-heading); letter-spacing:-.04em; line-height:1.12; }
+h1 { font-size:calc(clamp(2.4rem, 5vw, 4rem) * var(--site-heading-scale)); margin:15px 0 18px; max-width:650px; }
+h2 { font-size:calc(clamp(1.65rem, 3vw, 2.35rem) * var(--site-heading-scale)); margin:0 0 13px; }
+h3 { font-size:calc(1.16rem * var(--site-heading-scale)); margin:0 0 9px; }
+p { line-height:1.65; color:var(--text-muted); }
+.hero p { max-width:580px; font-size:1.08rem; }
+.actions { display:flex; gap:12px; flex-wrap:wrap; margin-top:25px; }
+.note { font-size:.82rem; margin-top:16px; }
+.card-stage { background:var(--site-secondary); border-radius:calc(28px * var(--site-radius-scale)); padding:28px; min-height:330px; display:grid; place-items:center; position:relative; overflow:hidden; }
+.card-stage:before { content:""; position:absolute; width:250px; height:250px; border-radius:50%; background:#FFFFFF; opacity:calc(.35 * var(--site-decoration-opacity)); right:-80px; top:-95px; }
+.med-card { width:min(100%, 370px); background:#FFFFFF; color:#18332F; border-radius:19px; padding:23px; box-shadow:0 16px 36px #164B4122; position:relative; transform:rotate(-2deg); }
+.card-top { display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #E1ECE8; padding-bottom:15px; }
+.card-brand { color:#126B63; font-weight:900; font-size:1.18rem; }
+.pill { border-radius:99px; background:#FFF2D6; color:#77500B; padding:6px 9px; font-size:.68rem; font-weight:800; }
+.patient { margin:17px 0 5px; font-size:1.1rem; font-weight:850; }
+.fake-label { color:#6B817C; font-size:.69rem; text-transform:uppercase; letter-spacing:.08em; font-weight:800; }
+.fake-data { font-size:.88rem; margin:5px 0 13px; }
+.card-bottom { display:flex; gap:15px; align-items:center; border-top:1px solid #E1ECE8; padding-top:14px; }
+.qr { width:69px; height:69px; flex:0 0 69px; background:repeating-conic-gradient(#18332F 0 25%,#fff 0 50%) 0 0/12px 12px; border:5px solid #fff; outline:1px solid #D7E7E2; position:relative; }
+.qr:after { content:"DEMO"; position:absolute; inset:22px 4px; background:#fff; color:#126B63; font-size:8px; font-weight:900; display:grid; place-items:center; }
+section { padding:42px 0; }
+.section-intro { max-width:690px; margin-bottom:25px; }
+.grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+.feature { background:var(--surface); border:1px solid var(--border); border-radius:calc(18px * var(--site-radius-scale)); padding:22px; }
+.icon { width:43px; height:43px; border-radius:13px; background:var(--site-secondary); color:var(--site-primary); display:grid; place-items:center; font-size:1.3rem; margin-bottom:17px; }
+.steps { display:grid; grid-template-columns:repeat(4,1fr); gap:13px; counter-reset:step; }
+.step { background:var(--surface-soft); padding:20px; border-radius:calc(16px * var(--site-radius-scale)); counter-increment:step; }
+.step:before { content:"0" counter(step); color:var(--site-primary); font-size:.8rem; font-weight:900; display:block; margin-bottom:14px; }
+.demo { display:grid; grid-template-columns:.8fr 1.2fr; gap:24px; align-items:start; }
+.demo-panel { background:var(--surface); border:1px solid var(--border); border-radius:calc(20px * var(--site-radius-scale)); padding:24px; }
+.demo-panel label { display:block; font-size:.85rem; font-weight:750; margin:13px 0 6px; }
+.demo-panel input, .demo-panel select, .demo-panel textarea { width:100%; border:1px solid var(--border); background:var(--site-background); color:var(--site-on-background); border-radius:10px; padding:11px 12px; font:inherit; }
+.demo-panel textarea { min-height:75px; resize:vertical; }
+.demo-result { background:var(--surface-soft); border-radius:14px; padding:18px; }
+.result-row { padding:12px 0; border-bottom:1px solid var(--border); }
+.result-row:last-child { border-bottom:0; }
+.result-row strong { display:block; font-size:.72rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:.07em; margin-bottom:5px; }
+.warning { border-left:4px solid var(--accent); background:light-dark(#FFF8E8,#342C1D); color:var(--site-on-background); padding:14px 16px; border-radius:0 12px 12px 0; font-size:.87rem; line-height:1.55; margin-top:18px; }
+footer { background:var(--site-primary); color:#FFFFFF; padding:26px 22px; text-align:center; }
+footer p { color:#D7EFEB; margin:6px auto; font-size:.82rem; max-width:850px; }
+@media (max-width:760px) { header { align-items:flex-start; flex-direction:column; } nav { gap:13px; } .hero { grid-template-columns:1fr; padding-top:43px; gap:24px; } .grid { grid-template-columns:1fr; } .steps { grid-template-columns:1fr 1fr; } .demo { grid-template-columns:1fr; } .card-stage { min-height:300px; padding:20px; } }
+@media (max-width:420px) { .steps { grid-template-columns:1fr; } .actions .button { width:100%; } }
+</style>
+</head>
+<body>
+<div id="app">
+<header>
+  <div class="brand"><span class="logo">+</span><span>FarmaSOS</span></div>
+  <nav aria-label="Navegação principal"><a href="#como-funciona">Como funciona</a><a href="#recursos">Recursos</a><a href="#demonstracao">Demonstração</a></nav>
+</header>
+<main>
+  <section class="hero" id="inicio">
+    <div>
+      <div class="eyebrow">Informação que pode fazer a diferença</div>
+      <h1>Seu histórico medicamentoso, mais acessível em uma emergência.</h1>
+      <p>O FarmaSOS conecta um cartão físico de emergência a uma plataforma digital com informações essenciais sobre medicamentos, alergias, condições de saúde e contato de emergência.</p>
+      <div class="actions"><a class="button" href="#demonstracao">Conhecer a demonstração <span aria-hidden="true">→</span></a><a class="button secondary" href="#como-funciona">Como funciona</a></div>
+      <p class="note">Projeto demonstrativo acadêmico. Os dados exibidos nesta página são fictícios.</p>
+    </div>
+    <div class="card-stage" aria-label="Exemplo visual do cartão FarmaSOS">
+      <div class="med-card">
+        <div class="card-top"><span class="card-brand">✚ FarmaSOS</span><span class="pill">EMERGÊNCIA</span></div>
+        <div class="patient">Maria de Exemplo</div>
+        <div class="fake-label">Contato de emergência</div><div class="fake-data">(00) 90000-0000 · Exemplo</div>
+        <div class="fake-label">Informação essencial</div><div class="fake-data">Alergias e condições relevantes devem ser destacadas.</div>
+        <div class="card-bottom"><div class="qr" aria-label="QR Code ilustrativo, não funcional"></div><div><strong style="color:#126B63">Aponte a câmera</strong><div style="font-size:.77rem;line-height:1.4;color:#6B817C;margin-top:5px">QR Code ilustrativo. Não abre prontuário real.</div></div></div>
+      </div>
+    </div>
+  </section>
+  <section id="recursos">
+    <div class="section-intro"><div class="eyebrow">O que a plataforma prevê</div><h2>Informações importantes, organizadas em um só lugar.</h2><p>A proposta é facilitar a consulta de dados relevantes durante um atendimento, sem substituir a avaliação clínica nem os registros oficiais de saúde.</p></div>
+    <div class="grid">
+      <article class="feature"><div class="icon">▤</div><h3>Medicamentos em uso</h3><p>Nome do medicamento, dose e orientações relevantes, com data da última conferência.</p></article>
+      <article class="feature"><div class="icon">♡</div><h3>Alergias e condições</h3><p>Campo para registrar alergias conhecidas e condições de saúde informadas pelo usuário.</p></article>
+      <article class="feature"><div class="icon">♙</div><h3>Contato de emergência</h3><p>Uma pessoa de referência para contato quando o usuário não puder fornecer informações.</p></article>
+    </div>
+  </section>
+  <section id="como-funciona">
+    <div class="section-intro"><div class="eyebrow">Fluxo proposto</div><h2>Do cadastro ao cartão físico.</h2><p>O acesso ao histórico completo deve ser protegido, com permissões adequadas e atenção à privacidade dos dados de saúde.</p></div>
+    <div class="steps">
+      <article class="step"><h3>Cadastro</h3><p>O usuário ou responsável fornece os dados necessários e autoriza seu uso.</p></article>
+      <article class="step"><h3>Conferência</h3><p>As informações são verificadas com documentos, prescrições ou embalagens disponíveis.</p></article>
+      <article class="step"><h3>Cartão + QR Code</h3><p>O cartão compacto facilita localizar a página de consulta autorizada.</p></article>
+      <article class="step"><h3>Consulta e atualização</h3><p>Profissionais autorizados consultam e atualizam os dados conforme suas permissões.</p></article>
+    </div>
+  </section>
+  <section id="demonstracao">
+    <div class="section-intro"><div class="eyebrow">Protótipo interativo</div><h2>Veja como um resumo poderia aparecer.</h2><p>Preencha os campos abaixo com informações fictícias para testar a visualização. Nada é enviado ou salvo em um servidor; ao atualizar a página, os dados de demonstração são reiniciados.</p></div>
+    <div class="demo">
+      <form class="demo-panel" id="demoForm">
+        <h3>Dados de demonstração</h3>
+        <label for="nome">Nome fictício</label><input id="nome" value="Maria de Exemplo" maxlength="80">
+        <label for="medicamentos">Medicamentos em uso</label><textarea id="medicamentos" maxlength="500">Exemplo: medicamento A — dose conforme prescrição</textarea>
+        <label for="alergias">Alergias conhecidas</label><input id="alergias" value="Exemplo: alergia informada pelo usuário" maxlength="250">
+        <label for="condicoes">Condições relevantes</label><input id="condicoes" value="Exemplo: condição informada pelo usuário" maxlength="250">
+        <label for="contato">Contato de emergência</label><input id="contato" value="Contato fictício — (00) 90000-0000" maxlength="100">
+        <button type="submit" style="margin-top:18px;width:100%">Atualizar visualização</button>
+      </form>
+      <div class="demo-panel">
+        <h3>Resumo do cartão digital</h3>
+        <div class="demo-result" aria-live="polite">
+          <div class="result-row"><strong>Usuário</strong><span id="outNome">Maria de Exemplo</span></div>
+          <div class="result-row"><strong>Medicamentos em uso</strong><span id="outMedicamentos">Exemplo: medicamento A — dose conforme prescrição</span></div>
+          <div class="result-row"><strong>Alergias conhecidas</strong><span id="outAlergias">Exemplo: alergia informada pelo usuário</span></div>
+          <div class="result-row"><strong>Condições relevantes</strong><span id="outCondicoes">Exemplo: condição informada pelo usuário</span></div>
+          <div class="result-row"><strong>Contato de emergência</strong><span id="outContato">Contato fictício — (00) 90000-0000</span></div>
+          <div class="result-row"><strong>Última conferência</strong><span>Data ilustrativa — a definir na versão real</span></div>
+        </div>
+        <div class="warning"><strong>Importante:</strong> esta é apenas uma demonstração visual. Não insira dados pessoais ou informações reais de saúde. O protótipo não gera QR Code funcional, não autentica profissionais e não salva cadastros.</div>
+      </div>
+    </div>
+  </section>
+  <section>
+    <div class="section-intro"><div class="eyebrow">Privacidade e segurança</div><h2>Dados de saúde precisam de proteção.</h2><p>Antes de usar com pessoas reais, o FarmaSOS precisará de uma solução segura para autenticação, controle de acesso, consentimento, correção e exclusão de dados, registro de alterações e adequação à LGPD. Também será necessário planejar uma alternativa para situações sem internet.</p></div>
+  </section>
+</main>
+<footer><strong>FarmaSOS · Cartão de Emergência Medicamentosa</strong><p>Protótipo acadêmico para demonstrar a proposta do projeto. Não é um prontuário médico nem um serviço de emergência.</p></footer>
+</div>
+<script>
+const fields = {
+  nome: 'outNome',
+  medicamentos: 'outMedicamentos',
+  alergias: 'outAlergias',
+  condicoes: 'outCondicoes',
+  contato: 'outContato'
+};
+document.getElementById('demoForm').addEventListener('submit', function(event) {
+  event.preventDefault();
+  for (const [inputId, outputId] of Object.entries(fields)) {
+    const input = document.getElementById(inputId);
+    document.getElementById(outputId).textContent = input.value.trim() || 'Não informado';
+  }
+});
+</script>
+</body>
+</html>
